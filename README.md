@@ -10,6 +10,6 @@ A github repository/devlog to track all my progress with the pygame framework in
 
 Watching a lot of youtube tutorials in order to learn it more effectively and i want to give credit to the creators that have been helping me learn alot and giving me the motivation to keep going
 
-Thank you<3
-Clear Code
+Thank you<3 <br />
+Clear Code  <br />
 Tech with Tim
