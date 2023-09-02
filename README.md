@@ -4,7 +4,7 @@ A github repository/devlog to track all my progress with the pygame framework in
 
 #### INDEX
 
-1. pygame_tutorial_runner - Inspired by Clear Code
+1. pygame_tutorial_runner - [The ultimate introduction to Pygame](https://www.youtube.com/watch?v=AY9MnQ4x3zk&ab_channel=ClearCode) - Clear Code
 
 #### INSPIRATIONS
 
