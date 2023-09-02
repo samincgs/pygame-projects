@@ -12,4 +12,5 @@ Watching a lot of youtube tutorials in order to learn it more effectively and i 
 
 Thank you<3 <br />
 -Clear Code  <br />
+-Coding with Russ <br/>
 -Tech with Tim
