@@ -4,6 +4,7 @@ pygame.init()
 
 width = 800
 height = 400
+bg_text_color = (192, 232, 236)
 
 
 screen = pygame.display.set_mode((width, height))
@@ -32,13 +33,11 @@ while True:
 
         # PLAYER OPTIONS TO JUMP
         if event.type == pygame.MOUSEBUTTONDOWN:
-            if player_rect.collidepoint(event.pos):
+            if player_rect.collidepoint(event.pos) and player_rect.bottom >= 300:
                 player_gravity = -20
         if event.type == pygame.KEYDOWN:
-            if event.key == pygame.K_SPACE:
+            if event.key == pygame.K_SPACE and player_rect.bottom >= 300:
                 player_gravity = -20
-        # if event.type == pygame.KEYUP:
-        #     print("key-up")
 
     # Map
     screen.blit(sky_surface, (0, 0))
@@ -47,14 +46,11 @@ while True:
     # Score
     pygame.draw.rect(
         screen,
-        (192, 232, 236),
+        bg_text_color,
         score_rect,
     )
-    pygame.draw.rect(screen, (192, 232, 236), score_rect, 10)
+    pygame.draw.rect(screen, bg_text_color, score_rect, 10)
     screen.blit(score_surf, score_rect)
-
-    # pygame.draw.line(screen, "black", (0, 0), (800,400))
-    # pygame.draw.ellipse(screen, "aqua", pygame.Rect(50, 200, 20, 20))
 
     # Snail
     screen.blit(snail_surf, snail_rect)
@@ -65,18 +61,23 @@ while True:
     # Player
     player_gravity += 1
     player_rect.y += player_gravity
+    if player_rect.bottom >= 300:
+        player_rect.bottom = 300
     screen.blit(player_surf, player_rect)
 
+    pygame.display.update()
+    clock.tick(60)
+
+    # OTHER SHAPES THAT CAN BE DRAWN
+    # pygame.draw.line(screen, "black", (0, 0), (800,400))
+    # pygame.draw.ellipse(screen, "aqua", pygame.Rect(50, 200, 20, 20))
+
+    # ALTERNATIVE FOR KEY PRESSED
     # keys = pygame.key.get_pressed()
     # if keys[pygame.K_SPACE]:
     #     print("jump")
 
-    # if player_rect.colliderect(snail_rect):
-    #     print("collision")
-
+    # ALTERNATIVE FOR MOUSE CLICK
     # mouse_pos = pygame.mouse.get_pos()
     # if player_rect.collidepoint((mouse_pos)):
     #     print("hit")
-
-    pygame.display.update()
-    clock.tick(60)
