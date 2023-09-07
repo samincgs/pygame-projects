@@ -22,7 +22,7 @@ ground_surface = pygame.image.load("graphics/ground.png").convert()
 
 # Obstacles
 snail_surf = pygame.image.load("graphics/snail/snail1.png").convert_alpha()
-snail_rect = snail_surf.get_rect(bottomleft=(600, 300))
+fly_surf = pygame.image.load("graphics/Fly/Fly1.png").convert_alpha()
 
 obstacle_rect_list = []
 
@@ -46,10 +46,16 @@ def display_score():
 def obstacle_movement(obstacle_list):
     if obstacle_list:
         for obstacles in obstacle_list:
-            obstacles.x -= 5
+            obstacles.x -= 6
 
-            screen.blit(snail_surf, obstacles)
+            if obstacles.bottom == 300:
+                screen.blit(snail_surf, obstacles)
+            else:
+                screen.blit(fly_surf, obstacles)
 
+            obstacle_list = [
+                obstacle for obstacle in obstacle_list if obstacle.x > -100
+            ]
         return obstacle_list
     else:
         return []
@@ -62,7 +68,7 @@ text_instruction_rect = text_instruction.get_rect(center=(width / 2, 335))
 
 # Timer
 obstacle_timer = pygame.USEREVENT + 1
-pygame.time.set_timer(obstacle_timer, 1200)
+pygame.time.set_timer(obstacle_timer, 1000)
 while True:
     for event in pygame.event.get():
         if event.type == pygame.QUIT:
@@ -81,13 +87,17 @@ while True:
         else:
             if event.type == pygame.KEYDOWN and event.key == pygame.K_SPACE:
                 game_active = True
-                snail_rect.left = 800
                 start_time = pygame.time.get_ticks()
 
         if event.type == obstacle_timer and game_active:
-            obstacle_rect_list.append(
-                snail_surf.get_rect(bottomleft=(randint(900, 1100), 300))
-            )
+            if randint(0, 2):
+                obstacle_rect_list.append(
+                    snail_surf.get_rect(bottomright=(randint(900, 1100), 300))
+                )
+            else:
+                obstacle_rect_list.append(
+                    fly_surf.get_rect(bottomright=(randint(900, 1100), 210))
+                )
 
     if game_active:
         # Map
@@ -120,8 +130,8 @@ while True:
         screen.blit(player_surf, player_rect)
 
         # state management
-        if player_rect.colliderect(snail_rect):
-            game_active = False
+        # if player_rect.colliderect(snail_rect):
+        #     game_active = False
     else:
         screen.fill(bg_restart_game)
         screen.blit(player_stand, player_stand_rect)
