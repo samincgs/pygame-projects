@@ -5,7 +5,7 @@ pygame.init()
 width = 800
 height = 400
 bg_text_color = (192, 232, 236)
-
+game_active = True
 
 screen = pygame.display.set_mode((width, height))
 pygame.display.set_caption("Tutorial Runner")
@@ -32,38 +32,50 @@ while True:
             sys.exit()
 
         # PLAYER OPTIONS TO JUMP
-        if event.type == pygame.MOUSEBUTTONDOWN:
-            if player_rect.collidepoint(event.pos) and player_rect.bottom >= 300:
-                player_gravity = -20
-        if event.type == pygame.KEYDOWN:
-            if event.key == pygame.K_SPACE and player_rect.bottom >= 300:
-                player_gravity = -20
+        if game_active:
+            if event.type == pygame.MOUSEBUTTONDOWN:
+                if player_rect.collidepoint(event.pos) and player_rect.bottom >= 300:
+                    player_gravity = -20
 
-    # Map
-    screen.blit(sky_surface, (0, 0))
-    screen.blit(ground_surface, (0, 300))
+            if event.type == pygame.KEYDOWN:
+                if event.key == pygame.K_SPACE and player_rect.bottom >= 300:
+                    player_gravity = -20
+        else:
+            if event.type == pygame.KEYDOWN and event.key == pygame.K_SPACE:
+                game_active = True
+                snail_rect.left = 800
 
-    # Score
-    pygame.draw.rect(
-        screen,
-        bg_text_color,
-        score_rect,
-    )
-    pygame.draw.rect(screen, bg_text_color, score_rect, 10)
-    screen.blit(score_surf, score_rect)
+    if game_active:
+        # Map
+        screen.blit(sky_surface, (0, 0))
+        screen.blit(ground_surface, (0, 300))
 
-    # Snail
-    screen.blit(snail_surf, snail_rect)
-    snail_rect.x -= 3
-    if snail_rect.right < 0:
-        snail_rect.left = 800
+        # Score
+        pygame.draw.rect(
+            screen,
+            bg_text_color,
+            score_rect,
+        )
+        screen.blit(score_surf, score_rect)
 
-    # Player
-    player_gravity += 1
-    player_rect.y += player_gravity
-    if player_rect.bottom >= 300:
-        player_rect.bottom = 300
-    screen.blit(player_surf, player_rect)
+        # Snail
+        screen.blit(snail_surf, snail_rect)
+        snail_rect.x -= 3
+        if snail_rect.right < 0:
+            snail_rect.left = 800
+
+        # Player
+        player_gravity += 1
+        player_rect.y += player_gravity
+        if player_rect.bottom >= 300:
+            player_rect.bottom = 300
+        screen.blit(player_surf, player_rect)
+
+        # state management
+        if player_rect.colliderect(snail_rect):
+            game_active = False
+    else:
+        screen.fill("black")
 
     pygame.display.update()
     clock.tick(60)
