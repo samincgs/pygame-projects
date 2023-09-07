@@ -13,7 +13,9 @@ test_font = pygame.font.Font("font/Pixeltype.ttf", 50)
 
 sky_surface = pygame.image.load("graphics/Sky.png").convert()
 ground_surface = pygame.image.load("graphics/ground.png").convert()
-text_surface = test_font.render("My game", False, "black"  )
+
+score_surf = test_font.render("Score: ", False, (64,64,64)  )
+score_rect = score_surf.get_rect(center = (width/2, height/2 - 150))
 
 snail_surf = pygame.image.load("graphics/snail/snail1.png").convert_alpha()
 snail_rect = snail_surf.get_rect(bottomleft = (600, 300))
@@ -29,13 +31,19 @@ while True:
         # if event.type == pygame.MOUSEMOTION:
         #     if player_rect.collidepoint(event.pos):
         #         print("hit")
-            
+    
+    
+    
    
     screen.blit(sky_surface, (0,0))
     screen.blit(ground_surface, (0, 300))
-    screen.blit(text_surface, (300, 50))
+    pygame.draw.rect(screen, 	(192, 232, 236), score_rect, )
+    pygame.draw.rect(screen, 	(192, 232, 236), score_rect, 10)
+    screen.blit(score_surf, score_rect)
     
-        
+    # pygame.draw.line(screen, "black", (0, 0), (800,400))
+    # pygame.draw.ellipse(screen, "aqua", pygame.Rect(50, 200, 20, 20))
+    
     
     screen.blit(snail_surf, snail_rect)
     snail_rect.x -=3
