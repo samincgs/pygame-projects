@@ -26,13 +26,19 @@ fly_surf = pygame.image.load("graphics/Fly/Fly1.png").convert_alpha()
 
 obstacle_rect_list = []
 
-player_surf = pygame.image.load("graphics/Player/player_walk_1.png").convert_alpha()
-player_rect = player_surf.get_rect(midbottom=(80, 300))
-player_gravity = 0
+player_walk_1 = pygame.image.load("graphics/Player/player_walk_1.png").convert_alpha()
+player_walk_2 = pygame.image.load("graphics/Player/player_walk_2.png").convert_alpha()
+player_jump = pygame.image.load("graphics/Player/jump.png").convert_alpha()
 player_stand = pygame.transform.scale2x(
     pygame.image.load("graphics/Player/player_stand.png")
 ).convert_alpha()
 player_stand_rect = player_stand.get_rect(center=(width / 2, height / 2))
+
+player_walk = [player_walk_1, player_walk_2]
+player_index = 0
+player_surf = player_walk[player_index]
+player_rect = player_surf.get_rect(midbottom=(80, 300))
+player_gravity = 0
 
 
 def display_score():
@@ -45,13 +51,13 @@ def display_score():
 
 def obstacle_movement(obstacle_list):
     if obstacle_list:
-        for obstacles in obstacle_list:
-            obstacles.x -= 6
+        for obstacles_rect in obstacle_list:
+            obstacles_rect.x -= 6
 
-            if obstacles.bottom == 300:
-                screen.blit(snail_surf, obstacles)
+            if obstacles_rect.bottom == 300:
+                screen.blit(snail_surf, obstacles_rect)
             else:
-                screen.blit(fly_surf, obstacles)
+                screen.blit(fly_surf, obstacles_rect)
 
             obstacle_list = [
                 obstacle for obstacle in obstacle_list if obstacle.x > -100
@@ -59,6 +65,25 @@ def obstacle_movement(obstacle_list):
         return obstacle_list
     else:
         return []
+
+
+def collisions(player, obstacles):
+    if obstacles:
+        for obstacle_rect in obstacles:
+            if player.colliderect(obstacle_rect):
+                return False
+    return True
+
+
+def player_animation():
+    global player_surf, player_index
+    if player_rect.bottom < 300:
+        player_surf = player_jump
+    else:
+        player_index += 0.1
+        if player_index >= len(player_walk):
+            player_index = 0
+        player_surf = player_walk[int(player_index)]
 
 
 game_name = test_font.render("Pixel Runner", False, bg_text_color)
@@ -121,18 +146,24 @@ while True:
 
         # Obstacle Movement
         obstacle_rect_list = obstacle_movement(obstacle_rect_list)
+        game_active = collisions(player_rect, obstacle_rect_list)
 
         # Player
         player_gravity += 1
         player_rect.y += player_gravity
         if player_rect.bottom >= 300:
             player_rect.bottom = 300
+
+        player_animation()
         screen.blit(player_surf, player_rect)
 
         # state management
         # if player_rect.colliderect(snail_rect):
         #     game_active = False
     else:
+        obstacle_rect_list.clear()
+        player_rect.midbottom = (80, 300)
+        player_gravity = 0
         screen.fill(bg_restart_game)
         screen.blit(player_stand, player_stand_rect)
 
