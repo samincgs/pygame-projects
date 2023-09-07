@@ -6,8 +6,10 @@ width = 800
 height = 400
 text_color = (64, 64, 64)
 bg_text_color = (192, 232, 236)
-game_active = True
+bg_restart_game = (94, 129, 162)
+game_active = False
 start_time = 0
+score = 0
 
 screen = pygame.display.set_mode((width, height))
 pygame.display.set_caption("Tutorial Runner")
@@ -17,8 +19,6 @@ test_font = pygame.font.Font("font/Pixeltype.ttf", 50)
 sky_surface = pygame.image.load("graphics/Sky.png").convert()
 ground_surface = pygame.image.load("graphics/ground.png").convert()
 
-# score_surf = test_font.render("Score: ", False, (64, 64, 64))
-# score_rect = score_surf.get_rect(center=(width / 2, height / 2 - 150))
 
 snail_surf = pygame.image.load("graphics/snail/snail1.png").convert_alpha()
 snail_rect = snail_surf.get_rect(bottomleft=(600, 300))
@@ -26,6 +26,10 @@ snail_rect = snail_surf.get_rect(bottomleft=(600, 300))
 player_surf = pygame.image.load("graphics/Player/player_walk_1.png").convert_alpha()
 player_rect = player_surf.get_rect(midbottom=(80, 300))
 player_gravity = 0
+player_stand = pygame.transform.scale2x(
+    pygame.image.load("graphics/Player/player_stand.png")
+).convert_alpha()
+player_stand_rect = player_stand.get_rect(center=(width / 2, height / 2))
 
 
 def display_score():
@@ -33,6 +37,13 @@ def display_score():
     score_surf = test_font.render(f"Score: {current_time // 1000}", False, text_color)
     score_rect = score_surf.get_rect(center=(width / 2, 50))
     screen.blit(score_surf, score_rect)
+    return current_time
+
+
+game_name = test_font.render("Pixel Runner", False, bg_text_color)
+game_name_rect = game_name.get_rect(center=(width / 2, height / 5))
+text_instruction = test_font.render("Press space to play", False, bg_text_color)
+text_instruction_rect = text_instruction.get_rect(center=(width / 2, 335))
 
 
 while True:
@@ -61,7 +72,7 @@ while True:
         screen.blit(ground_surface, (0, 300))
 
         # Score
-        display_score()
+        score = display_score() // 1000
         # pygame.draw.rect(
         #     screen,
         #     bg_text_color,
@@ -86,7 +97,17 @@ while True:
         if player_rect.colliderect(snail_rect):
             game_active = False
     else:
-        screen.fill("black")
+        screen.fill(bg_restart_game)
+        screen.blit(player_stand, player_stand_rect)
+
+        score_message = test_font.render(f"Score: {score}", False, bg_text_color)
+        score_message_rect = score_message.get_rect(center=(width / 2, 335))
+        screen.blit(game_name, game_name_rect)
+
+        if score == 0:
+            screen.blit(text_instruction, text_instruction_rect)
+        else:
+            screen.blit(score_message, score_message_rect)
 
     pygame.display.update()
     clock.tick(60)
