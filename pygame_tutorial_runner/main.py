@@ -4,8 +4,10 @@ pygame.init()
 
 width = 800
 height = 400
+text_color = (64, 64, 64)
 bg_text_color = (192, 232, 236)
 game_active = True
+start_time = 0
 
 screen = pygame.display.set_mode((width, height))
 pygame.display.set_caption("Tutorial Runner")
@@ -15,8 +17,8 @@ test_font = pygame.font.Font("font/Pixeltype.ttf", 50)
 sky_surface = pygame.image.load("graphics/Sky.png").convert()
 ground_surface = pygame.image.load("graphics/ground.png").convert()
 
-score_surf = test_font.render("Score: ", False, (64, 64, 64))
-score_rect = score_surf.get_rect(center=(width / 2, height / 2 - 150))
+# score_surf = test_font.render("Score: ", False, (64, 64, 64))
+# score_rect = score_surf.get_rect(center=(width / 2, height / 2 - 150))
 
 snail_surf = pygame.image.load("graphics/snail/snail1.png").convert_alpha()
 snail_rect = snail_surf.get_rect(bottomleft=(600, 300))
@@ -24,6 +26,14 @@ snail_rect = snail_surf.get_rect(bottomleft=(600, 300))
 player_surf = pygame.image.load("graphics/Player/player_walk_1.png").convert_alpha()
 player_rect = player_surf.get_rect(midbottom=(80, 300))
 player_gravity = 0
+
+
+def display_score():
+    current_time = pygame.time.get_ticks() - start_time
+    score_surf = test_font.render(f"Score: {current_time // 1000}", False, text_color)
+    score_rect = score_surf.get_rect(center=(width / 2, 50))
+    screen.blit(score_surf, score_rect)
+
 
 while True:
     for event in pygame.event.get():
@@ -44,23 +54,24 @@ while True:
             if event.type == pygame.KEYDOWN and event.key == pygame.K_SPACE:
                 game_active = True
                 snail_rect.left = 800
-
+                start_time = pygame.time.get_ticks()
     if game_active:
         # Map
         screen.blit(sky_surface, (0, 0))
         screen.blit(ground_surface, (0, 300))
 
         # Score
-        pygame.draw.rect(
-            screen,
-            bg_text_color,
-            score_rect,
-        )
-        screen.blit(score_surf, score_rect)
+        display_score()
+        # pygame.draw.rect(
+        #     screen,
+        #     bg_text_color,
+        #     score_rect,
+        # )
+        # screen.blit(score_surf, score_rect)
 
         # Snail
         screen.blit(snail_surf, snail_rect)
-        snail_rect.x -= 3
+        snail_rect.x -= 5
         if snail_rect.right < 0:
             snail_rect.left = 800
 
