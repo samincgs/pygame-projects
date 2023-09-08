@@ -5,12 +5,13 @@ A github repository/devlog to track all my progress with the pygame framework in
 #### INDEX
 
 pygame_tutorial_runner - [The ultimate introduction to Pygame](https://www.youtube.com/watch?v=AY9MnQ4x3zk&ab_channel=ClearCode)
+space_dodge - [How to Make a Game in Python](https://www.youtube.com/watch?v=waY3LfJhQLY&list=PLAvVXyde8w3fJJPbP7kybQsCJlULEImJD&index=2&t=992s&ab_channel=TechWithTim)
 
 #### INSPIRATIONS
 
 Watching a lot of youtube tutorials in order to learn it more effectively and i want to give credit to the creators that have been helping me learn alot and giving me the motivation to keep going
 
 Thank you<3 <br />
--Clear Code  <br />
+-Clear Code <br />
 -Coding with Russ <br/>
 -Tech with Tim
