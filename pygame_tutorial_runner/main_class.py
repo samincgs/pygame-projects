@@ -9,6 +9,7 @@ height = 400
 text_color = (64, 64, 64)
 bg_text_color = (192, 232, 236)
 bg_restart_game = (94, 129, 162)
+bg_music = pygame.mixer.Sound("audio/music.wav")
 game_active = False
 start_time = 0
 score = 0
@@ -70,6 +71,8 @@ class Player(pygame.sprite.Sprite):
         self.player_walk = [player_walk_1, player_walk_2]
         self.player_index = 0
         self.player_jump = pygame.image.load("graphics/Player/jump.png").convert_alpha()
+        self.jump_sound = pygame.mixer.Sound("audio/jump.mp3")
+        self.jump_sound.set_volume(0.1)
 
         self.image = self.player_walk[self.player_index]
         self.rect = self.image.get_rect(midbottom=(80, 300))
@@ -80,6 +83,8 @@ class Player(pygame.sprite.Sprite):
         mouse = pygame.mouse.get_pressed()
         if keys[pygame.K_SPACE] and self.rect.bottom >= 300:
             self.gravity = -17
+            self.jump_sound.play()
+
         if mouse[0] and self.rect.bottom >= 300:
             if self.rect.collidepoint(pygame.mouse.get_pos()):
                 self.gravity = -17
@@ -265,6 +270,9 @@ while True:
             #     fly_surf = fly_frames[fly_index]
 
     if game_active:
+        # AUDIO
+        bg_music.play()
+        bg_music.set_volume(0.05)
         # MAP
         screen.blit(sky_surface, (0, 0))
         screen.blit(ground_surface, (0, 300))
@@ -294,6 +302,7 @@ while True:
 
     else:
         obstacle_rect_list.clear()
+        bg_music.stop()
         player_rect.midbottom = (80, 300)
         player_gravity = 0
         screen.fill(bg_restart_game)
