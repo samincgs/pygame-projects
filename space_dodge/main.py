@@ -80,11 +80,9 @@ while run:
         star.y += star_velocity
         if star.y > height:
             stars.remove(star)
-        elif star.y + star.height >= spaceship_rect.y and star.colliderect(
-            spaceship_rect
-        ):
-            hit = True
+        elif star.colliderect(spaceship_rect):
             stars.remove(star)
+            hit = True
             break
 
     screen.blit(wallpaper, (0, 0))
@@ -93,5 +91,13 @@ while run:
 
     for star in stars:
         pygame.draw.rect(screen, "white", star)
+
+    if hit:
+        lost_text = font.render("You Lost!", False, "white")
+        lost_text_rect = lost_text.get_rect(center=(width / 2, height / 2))
+        screen.blit(lost_text, lost_text_rect)
+        pygame.display.flip()
+        pygame.time.delay(3000)
+        break
 
     pygame.display.update()
