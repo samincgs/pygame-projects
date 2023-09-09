@@ -10,6 +10,14 @@ start_time = time.time()
 elapsed_time = 0
 # left_pressed = False
 # right_pressed = False
+star_add_increment = 2000
+star_count = 0
+star_width = 10
+star_height = 20
+star_velocity = 5
+hit = False
+
+stars = []
 
 screen = pygame.display.set_mode((width, height))
 pygame.display.set_caption("Space Dodge")
@@ -30,7 +38,17 @@ spaceship_rect = spaceship_surf.get_rect(midbottom=(width / 2, height))
 run = True
 
 while run:
+    star_count += clock.tick(60)
     elapsed_time = time.time() - start_time
+
+    if star_count > star_add_increment:
+        for _ in range(3):
+            star_x = random.randint(0, width - star_width)
+            star = pygame.Rect(star_x, -star_height, star_width, star_height)
+            stars.append(star)
+
+        star_add_increment = max(200, star_add_increment - 50)
+        star_count = 0
 
     # TEXT
     game_text = font.render(f"Time: {round(elapsed_time)}", False, "white")
@@ -58,9 +76,22 @@ while run:
     if keys[pygame.K_RIGHT] and spaceship_rect.right <= width:
         spaceship_rect.x += spaceship_velocity
 
+    for star in stars[:]:
+        star.y += star_velocity
+        if star.y > height:
+            stars.remove(star)
+        elif star.y + star.height >= spaceship_rect.y and star.colliderect(
+            spaceship_rect
+        ):
+            hit = True
+            stars.remove(star)
+            break
+
     screen.blit(wallpaper, (0, 0))
     screen.blit(spaceship_surf, spaceship_rect)
     screen.blit(game_text, game_text_rect)
 
+    for star in stars:
+        pygame.draw.rect(screen, "white", star)
+
     pygame.display.update()
-    clock.tick(60)
