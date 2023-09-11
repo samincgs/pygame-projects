@@ -1,4 +1,4 @@
-import pygame, sys
+import pygame, sys, random
 
 
 pygame.init()
@@ -12,8 +12,8 @@ pygame.display.set_caption("Pong")
 clock = pygame.time.Clock()
 
 ball = pygame.Rect(width / 2 - 15, height / 2 - 15, 30, 30)
-ball_speed_x = 7
-ball_speed_y = 7
+ball_speed_x = 7 * random.choice((1, -1))
+ball_speed_y = 7 * random.choice((1, -1))
 
 player = pygame.Rect(width - 20, height / 2 - 70, 10, 140)
 player_speed = 7
@@ -31,7 +31,7 @@ def ball_animation():
     if ball.bottom >= height or ball.top <= 0:
         ball_speed_y *= -1
     if ball.left <= 0 or ball.right >= width:
-        ball_speed_x *= -1
+        ball_restart()
 
     if ball.colliderect(player) or ball.colliderect(opponent):
         ball_speed_x *= -1
@@ -51,6 +51,13 @@ def opponent_ai():
         opponent.y += opponent_speed
     if opponent.bottom > ball.y:
         opponent.y -= opponent_speed
+
+
+def ball_restart():
+    global ball_speed_x, ball_speed_y
+    ball.center = (width / 2, height / 2)
+    ball_speed_x *= random.choice((1, -1))
+    ball_speed_y *= random.choice((1, -1))
 
 
 while True:
