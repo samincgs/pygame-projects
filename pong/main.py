@@ -6,6 +6,7 @@ pygame.init()
 width, height = 1280, 960
 bg_color = pygame.Color("grey12")
 light_grey = (200, 200, 200)
+font = pygame.font.Font(None, 40)
 
 screen = pygame.display.set_mode((width, height))
 pygame.display.set_caption("Pong")
@@ -17,9 +18,14 @@ ball_speed_y = 7 * random.choice((1, -1))
 
 player = pygame.Rect(width - 20, height / 2 - 70, 10, 140)
 player_speed = 7
+player_score = 0
 
 opponent = pygame.Rect(10, height / 2 - 70, 10, 140)
 opponent_speed = 7
+opponent_score = 0
+
+score_text = font.render(f"{ player_score}", False, light_grey)
+score_text_opponent = font.render(f"{opponent_score}", False, light_grey)
 
 
 def ball_animation():
@@ -72,6 +78,9 @@ while True:
 
     screen.fill(bg_color)
 
+    screen.blit(score_text, (width/2 + 30, height/2))
+    screen.blit(score_text_opponent, (width/2 - 50, height/ 2))
+    
     pygame.draw.aaline(screen, light_grey, (width / 2, 0), (width / 2, height))
     pygame.draw.rect(screen, light_grey, player)
     pygame.draw.rect(screen, light_grey, opponent)
