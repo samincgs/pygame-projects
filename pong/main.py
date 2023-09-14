@@ -11,6 +11,8 @@ font = pygame.font.Font(None, 40)
 screen = pygame.display.set_mode((width, height))
 pygame.display.set_caption("Pong")
 clock = pygame.time.Clock()
+score_time = None
+
 
 ball = pygame.Rect(width / 2 - 15, height / 2 - 15, 30, 30)
 ball_speed_x = 7 * random.choice((1, -1))
@@ -24,20 +26,23 @@ opponent = pygame.Rect(10, height / 2 - 70, 10, 140)
 opponent_speed = 7
 opponent_score = 0
 
-score_text = font.render(f"{ player_score}", False, light_grey)
-score_text_opponent = font.render(f"{opponent_score}", False, light_grey)
-
 
 def ball_animation():
-    global ball_speed_x, ball_speed_y
+    global ball_speed_x, ball_speed_y, player_score, opponent_score, score_time
 
     ball.x += ball_speed_x
     ball.y += ball_speed_y
 
     if ball.bottom >= height or ball.top <= 0:
         ball_speed_y *= -1
-    if ball.left <= 0 or ball.right >= width:
-        ball_restart()
+
+    if ball.left <= 0:
+        player_score += 1
+        score_time = pygame.time.get_ticks()
+
+    if ball.right >= width:
+        opponent_score += 1
+        score_time = pygame.time.get_ticks()
 
     if ball.colliderect(player) or ball.colliderect(opponent):
         ball_speed_x *= -1
@@ -60,10 +65,17 @@ def opponent_ai():
 
 
 def ball_restart():
-    global ball_speed_x, ball_speed_y
+    global ball_speed_x, ball_speed_y, score_time
+
+    current_time = pygame.time.get_ticks()
     ball.center = (width / 2, height / 2)
-    ball_speed_x *= random.choice((1, -1))
-    ball_speed_y *= random.choice((1, -1))
+
+    if current_time - score_time < 2000:
+        ball_speed_x, ball_speed_y = 0, 0
+    else:
+        ball_speed_x = 7 * random.choice((1, -1))
+        ball_speed_y = 7 * random.choice((1, -1))
+        score_time = None
 
 
 while True:
@@ -72,15 +84,21 @@ while True:
             pygame.quit()
             sys.exit()
 
+    if score_time:
+        ball_restart()
+
     ball_animation()
     player_input()
     opponent_ai()
 
     screen.fill(bg_color)
 
-    screen.blit(score_text, (width/2 + 30, height/2))
-    screen.blit(score_text_opponent, (width/2 - 50, height/ 2))
-    
+    score_text = font.render(f"{ player_score}", False, light_grey)
+    score_text_opponent = font.render(f"{opponent_score}", False, light_grey)
+
+    screen.blit(score_text, (width / 2 + 30, height / 2))
+    screen.blit(score_text_opponent, (width / 2 - 50, height / 2))
+
     pygame.draw.aaline(screen, light_grey, (width / 2, 0), (width / 2, height))
     pygame.draw.rect(screen, light_grey, player)
     pygame.draw.rect(screen, light_grey, opponent)
