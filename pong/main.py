@@ -11,7 +11,7 @@ font = pygame.font.Font(None, 40)
 screen = pygame.display.set_mode((width, height))
 pygame.display.set_caption("Pong")
 clock = pygame.time.Clock()
-score_time = None
+score_time = True
 
 
 ball = pygame.Rect(width / 2 - 15, height / 2 - 15, 30, 30)
@@ -70,7 +70,17 @@ def ball_restart():
     current_time = pygame.time.get_ticks()
     ball.center = (width / 2, height / 2)
 
-    if current_time - score_time < 2000:
+    if current_time - score_time < 700:
+        countdown_three = font.render("3", False, "red")
+        screen.blit(countdown_three, (width / 2 - 7, height / 2 - 70))
+    if 700 < current_time - score_time < 1400:
+        countdown_two = font.render("2", False, "red")
+        screen.blit(countdown_two, (width / 2 - 7, height / 2 - 70))
+    if 1400 < current_time - score_time < 2100:
+        countdown_one = font.render("1", False, "red")
+        screen.blit(countdown_one, (width / 2 - 7, height / 2 - 70))
+
+    if current_time - score_time < 2100:
         ball_speed_x, ball_speed_y = 0, 0
     else:
         ball_speed_x = 7 * random.choice((1, -1))
@@ -83,9 +93,6 @@ while True:
         if event.type == pygame.QUIT:
             pygame.quit()
             sys.exit()
-
-    if score_time:
-        ball_restart()
 
     ball_animation()
     player_input()
@@ -103,6 +110,9 @@ while True:
     pygame.draw.rect(screen, light_grey, player)
     pygame.draw.rect(screen, light_grey, opponent)
     pygame.draw.ellipse(screen, "white", ball)
+
+    if score_time:
+        ball_restart()
 
     pygame.display.update()
     clock.tick(60)
