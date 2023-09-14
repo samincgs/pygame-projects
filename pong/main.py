@@ -1,6 +1,5 @@
 import pygame, sys, random
 
-
 pygame.init()
 
 width, height = 1280, 960
@@ -44,7 +43,9 @@ def ball_animation():
         opponent_score += 1
         score_time = pygame.time.get_ticks()
 
-    if ball.colliderect(player) or ball.colliderect(opponent):
+    if ball.colliderect(player) and ball_speed_x > 0:
+        ball_speed_x *= -1
+    if ball.colliderect(opponent) and ball_speed_x < 0:
         ball_speed_x *= -1
 
 
