@@ -1,5 +1,6 @@
 import pygame, sys, random
 
+pygame.mixer.pre_init(44100, -16, 2, 512)
 pygame.init()
 
 width, height = 1280, 960
@@ -11,7 +12,6 @@ screen = pygame.display.set_mode((width, height))
 pygame.display.set_caption("Pong")
 clock = pygame.time.Clock()
 score_time = True
-
 
 ball = pygame.Rect(width / 2 - 15, height / 2 - 15, 30, 30)
 ball_speed_x = 7 * random.choice((1, -1))
@@ -25,6 +25,9 @@ opponent = pygame.Rect(10, height / 2 - 70, 10, 140)
 opponent_speed = 7
 opponent_score = 0
 
+pong_sound = pygame.mixer.Sound("sounds/pong.ogg")
+score_sound = pygame.mixer.Sound("sounds/score.ogg")
+
 
 def ball_animation():
     global ball_speed_x, ball_speed_y, player_score, opponent_score, score_time
@@ -33,17 +36,21 @@ def ball_animation():
     ball.y += ball_speed_y
 
     if ball.bottom >= height or ball.top <= 0:
+        pygame.mixer.Sound.play(pong_sound)
         ball_speed_y *= -1
 
     if ball.left <= 0:
+        pygame.mixer.Sound.play(score_sound)
         player_score += 1
         score_time = pygame.time.get_ticks()
 
     if ball.right >= width:
+        pygame.mixer.Sound.play(score_sound)
         opponent_score += 1
         score_time = pygame.time.get_ticks()
 
     if ball.colliderect(player) and ball_speed_x > 0:
+        pygame.mixer.Sound.play(pong_sound)
         if abs(ball.right - player.left) < 10:
             ball_speed_x *= -1
         elif abs(ball.top - player.bottom) < 10 and ball_speed_y < 0:
@@ -52,6 +59,7 @@ def ball_animation():
             ball_speed_y *= -1
 
     if ball.colliderect(opponent) and ball_speed_x < 0:
+        pygame.mixer.Sound.play(pong_sound)
         if abs(ball.left - opponent.right) < 10:
             ball_speed_x *= -1
         elif abs(ball.top - opponent.bottom) < 10 and ball_speed_y < 0:
