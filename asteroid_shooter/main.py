@@ -9,21 +9,20 @@ clock = pygame.time.Clock()
 
 # Images
 bg_surf = pygame.image.load("graphics/background.png").convert()
-
 ship_surf = pygame.image.load("graphics/ship.png").convert_alpha()
 ship_rect = ship_surf.get_rect(center=(WINDOW_WIDTH / 2, WINDOW_HEIGHT / 2))
-
 laser_surf = pygame.image.load("graphics/laser.png").convert()
 laser_rect = laser_surf.get_rect(midbottom=(ship_rect.midtop))
 
-print(ship_rect.top)
+
 # Fonts
 text_font = pygame.font.Font("graphics/subatomic.ttf", 40)
 asteroid_msg = text_font.render("ASTEROID!", True, (255, 255, 255))
 asteroid_msg_rect = asteroid_msg.get_rect(center=(WINDOW_WIDTH / 2, 120))
 
-# Event Loop
+
 while True:
+    # Event Loop
     for event in pygame.event.get():
         if event.type == pygame.QUIT:
             pygame.quit()
@@ -41,9 +40,12 @@ while True:
 
     screen.blit(bg_surf, (0, 0))
 
+    pygame.draw.rect(
+        screen, "white", asteroid_msg_rect.inflate(30, 30), width=6, border_radius=10
+    )
+    screen.blit(asteroid_msg, asteroid_msg_rect)
     screen.blit(laser_surf, laser_rect)
     screen.blit(ship_surf, ship_rect)
-    screen.blit(asteroid_msg, asteroid_msg_rect)
 
     pygame.display.update()
     clock.tick(120)
