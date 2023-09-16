@@ -8,6 +8,7 @@ extra_tutorials (extra tutorials on different topics in pygame) - Clear Code <br
 pygame_tutorial_runner - Clear Code <br/>
 space_dodge - Tech with Tim <br/>
 pong - Clear Code <br/>
+asteroid_shooter = Clear Code <br/>
 
 #### INSPIRATIONS
 
