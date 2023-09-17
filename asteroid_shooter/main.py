@@ -6,13 +6,15 @@ WINDOW_WIDTH, WINDOW_HEIGHT = 1280, 720
 screen = pygame.display.set_mode((WINDOW_WIDTH, WINDOW_HEIGHT))
 pygame.display.set_caption("Asteroid Shooter")
 clock = pygame.time.Clock()
+speed = 700
 
 # Images
 bg_surf = pygame.image.load("graphics/background.png").convert()
 ship_surf = pygame.image.load("graphics/ship.png").convert_alpha()
 ship_rect = ship_surf.get_rect(center=(WINDOW_WIDTH / 2, WINDOW_HEIGHT / 2))
 laser_surf = pygame.image.load("graphics/laser.png").convert()
-laser_rect = laser_surf.get_rect(midbottom=(ship_rect.midtop))
+laser_list = []
+# laser_rect = laser_surf.get_frect(midbottom=(ship_rect.midtop))
 
 
 # Fonts
@@ -27,16 +29,16 @@ while True:
         if event.type == pygame.QUIT:
             pygame.quit()
             sys.exit()
-        # if event.type == pygame.MOUSEMOTION:
-        #     ship_rect.center = event.pos
-        # if event.type == pygame.MOUSEBUTTONUP:
-        #     print(event.pos)
+        if event.type == pygame.MOUSEBUTTONDOWN:
+            laser_rect = laser_surf.get_rect(midbottom=(ship_rect.midtop))
+            laser_list.append(laser_rect)
 
     # mouse events
     # mouse = pygame.mouse.get_pressed()
-    # ship_rect.center = pygame.mouse.get_pos()
+    ship_rect.center = pygame.mouse.get_pos()
 
-    laser_rect.y -= 7
+    # dt
+    dt = clock.tick(120) / 1000
 
     screen.blit(bg_surf, (0, 0))
 
@@ -44,8 +46,11 @@ while True:
         screen, "white", asteroid_msg_rect.inflate(30, 30), width=6, border_radius=10
     )
     screen.blit(asteroid_msg, asteroid_msg_rect)
-    screen.blit(laser_surf, laser_rect)
     screen.blit(ship_surf, ship_rect)
+    for laser in laser_list:
+        screen.blit(laser_surf, laser)
+        laser.y -= round(speed * dt)
+        if laser.bottom < 0:
+            laser_list.remove(laser)
 
     pygame.display.update()
-    clock.tick(120)
