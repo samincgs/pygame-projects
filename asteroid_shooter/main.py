@@ -19,8 +19,6 @@ laser_list = []
 
 # Fonts
 text_font = pygame.font.Font("graphics/subatomic.ttf", 40)
-asteroid_msg = text_font.render("ASTEROID!", True, (255, 255, 255))
-asteroid_msg_rect = asteroid_msg.get_rect(center=(WINDOW_WIDTH / 2, 120))
 
 
 while True:
@@ -36,11 +34,15 @@ while True:
     # mouse events
     # mouse = pygame.mouse.get_pressed()
     ship_rect.center = pygame.mouse.get_pos()
-
     # dt
     dt = clock.tick(120) / 1000
 
     screen.blit(bg_surf, (0, 0))
+
+    asteroid_msg = text_font.render(
+        f"Score: {(pygame.time.get_ticks() // 1000)} ", True, (255, 255, 255)
+    )
+    asteroid_msg_rect = asteroid_msg.get_rect(center=(WINDOW_WIDTH / 2, 600))
 
     pygame.draw.rect(
         screen, "white", asteroid_msg_rect.inflate(30, 30), width=6, border_radius=10
