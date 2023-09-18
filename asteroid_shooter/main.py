@@ -1,3 +1,4 @@
+# Asteroid Shooter Game created using functional programming.
 import pygame, sys, random
 
 # Init
@@ -28,6 +29,15 @@ meteor_surf = pygame.image.load("graphics/meteor.png").convert_alpha()
 meteor_list = []
 meteor_speed = 100
 
+# Sounds
+laser_sound = pygame.mixer.Sound("sounds/laser.ogg")
+laser_sound.set_volume(0.1)
+explosion_sound = pygame.mixer.Sound("sounds/explosion.wav")
+explosion_sound.set_volume(0.1)
+game_sound = pygame.mixer.Sound("sounds/music.wav")
+game_sound.set_volume(0.1)
+game_sound.play(loops=-1)
+
 
 while True:
     # Event Loop
@@ -36,6 +46,7 @@ while True:
             pygame.quit()
             sys.exit()
         if event.type == pygame.MOUSEBUTTONDOWN and can_shoot:
+            laser_sound.play()
             laser_rect = laser_surf.get_rect(midbottom=(ship_rect.midtop))
             laser_list.append(laser_rect)
 
@@ -83,6 +94,7 @@ while True:
             if laser_rect.colliderect(meteor_tuple[0]):
                 laser_list.remove(laser)
                 meteor_list.remove(meteor_tuple)
+                explosion_sound.play()
 
     asteroid_msg = text_font.render(
         f"Score: {(pygame.time.get_ticks() // 1000)} ", True, (255, 255, 255)
