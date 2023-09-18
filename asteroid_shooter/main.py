@@ -23,10 +23,10 @@ text_font = pygame.font.Font("graphics/subatomic.ttf", 40)
 
 # Meteor
 meteor_timer = pygame.event.custom_type()
-pygame.time.set_timer(meteor_timer, 600)
+pygame.time.set_timer(meteor_timer, 300)
 meteor_surf = pygame.image.load("graphics/meteor.png").convert_alpha()
 meteor_list = []
-meteor_speed = 400
+meteor_speed = 100
 
 
 while True:
@@ -59,6 +59,7 @@ while True:
     # mouse events
     # mouse = pygame.mouse.get_pressed()
 
+    screen.blit(bg_surf, (0, 0))
     ship_rect.center = pygame.mouse.get_pos()
 
     if not can_shoot:
@@ -69,7 +70,19 @@ while True:
     # dt
     dt = clock.tick(120) / 1000
 
-    screen.blit(bg_surf, (0, 0))
+    # collisions
+    for meteor_tuple in meteor_list:
+        meteor_rect = meteor_tuple[0]
+        if ship_rect.colliderect(meteor_rect):
+            pygame.quit()
+            sys.exit()
+
+    # laser meteor collision
+    for laser in laser_list:
+        for meteor_tuple in meteor_list:
+            if laser_rect.colliderect(meteor_tuple[0]):
+                laser_list.remove(laser)
+                meteor_list.remove(meteor_tuple)
 
     asteroid_msg = text_font.render(
         f"Score: {(pygame.time.get_ticks() // 1000)} ", True, (255, 255, 255)
