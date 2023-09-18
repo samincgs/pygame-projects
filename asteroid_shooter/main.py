@@ -1,4 +1,4 @@
-import pygame, sys
+import pygame, sys, random
 
 # Init
 pygame.init()
@@ -21,6 +21,13 @@ shoot_time = None
 # Fonts
 text_font = pygame.font.Font("graphics/subatomic.ttf", 40)
 
+# Meteor
+meteor_timer = pygame.event.custom_type()
+pygame.time.set_timer(meteor_timer, 600)
+meteor_surf = pygame.image.load("graphics/meteor.png").convert_alpha()
+meteor_list = []
+meteor_speed = 400
+
 
 while True:
     # Event Loop
@@ -34,6 +41,20 @@ while True:
 
             can_shoot = False
             shoot_time = pygame.time.get_ticks()
+
+        if event.type == meteor_timer:
+            x_pos = random.randint(-100, WINDOW_WIDTH + 100)
+            y_pos = random.randint(-100, -50)
+            meteor_rect = meteor_surf.get_rect(
+                center=(
+                    x_pos,
+                    y_pos,
+                )
+            )
+
+            direction = pygame.math.Vector2(random.uniform(-0.5, 0.5), 1)
+
+            meteor_list.append((meteor_rect, direction))
 
     # mouse events
     # mouse = pygame.mouse.get_pressed()
@@ -53,18 +74,27 @@ while True:
     asteroid_msg = text_font.render(
         f"Score: {(pygame.time.get_ticks() // 1000)} ", True, (255, 255, 255)
     )
-    asteroid_msg_rect = asteroid_msg.get_rect(center=(WINDOW_WIDTH / 2, 600))
+    asteroid_msg_rect = asteroid_msg.get_rect(center=(WINDOW_WIDTH / 2, 620))
 
     pygame.draw.rect(
         screen, "white", asteroid_msg_rect.inflate(30, 30), width=6, border_radius=10
     )
-    print(can_shoot)
     screen.blit(asteroid_msg, asteroid_msg_rect)
     screen.blit(ship_surf, ship_rect)
+
     for laser in laser_list:
         screen.blit(laser_surf, laser)
         laser.y -= round(speed * dt)
         if laser.bottom < 0:
             laser_list.remove(laser)
+
+    for meteor_tuple in meteor_list:
+        meteor_rect = meteor_tuple[0]
+        screen.blit(meteor_surf, meteor_rect)
+        direction = meteor_tuple[1]
+        meteor_rect.center += direction * speed * dt
+        # meteor.y += round(meteor_speed * dt)
+        if meteor_rect.top > WINDOW_HEIGHT:
+            meteor_list.remove(meteor_tuple)
 
     pygame.display.update()
