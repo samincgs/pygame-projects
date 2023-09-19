@@ -1,4 +1,4 @@
-import pygame, sys
+import pygame, sys, random
 
 
 class Ship(pygame.sprite.Sprite):
@@ -25,7 +25,7 @@ class Ship(pygame.sprite.Sprite):
             self.can_shoot = False
             self.shoot_time = pygame.time.get_ticks()
 
-            Laser(laser_group, self.rect.midtop)
+            Laser(self.rect.midtop, laser_group)
 
     def update(self):
         self.laser_time()
@@ -35,13 +35,29 @@ class Ship(pygame.sprite.Sprite):
 
 
 class Laser(pygame.sprite.Sprite):
-    def __init__(self, groups, pos):
+    def __init__(self, pos, groups):
         super().__init__(groups)
         self.image = pygame.image.load("graphics/laser.png").convert_alpha()
         self.rect = self.image.get_rect(midbottom=(pos))
         self.pos = pygame.math.Vector2(self.rect.topleft)
         self.direction = pygame.math.Vector2(0, -1)
         self.speed = 600
+
+    def update(self):
+        self.pos += self.direction * self.speed * dt
+        self.rect.topleft = (round(self.pos.x), round(self.pos.y))
+
+
+class Meteor(pygame.sprite.Sprite):
+    def __init__(self, groups):
+        super().__init__(groups)
+        self.image = pygame.image.load("graphics/meteor.png").convert_alpha()
+        x = random.randint(10, screen_width - 10)
+        y = random.randint(-150, 50)
+        self.rect = self.image.get_rect(midbottom=(x, y))
+        self.pos = pygame.math.Vector2(self.rect.topleft)
+        self.direction = pygame.math.Vector2(random.uniform(-0.5, 0.5), 1)
+        self.speed = random.randint(400, 700)
 
     def update(self):
         self.pos += self.direction * self.speed * dt
@@ -58,12 +74,15 @@ clock = pygame.time.Clock()
 # background
 bg = pygame.image.load("graphics/background.png").convert()
 
+meteor_timer = pygame.event.custom_type()
+pygame.time.set_timer(meteor_timer, 300)
+
 # object calls
 ship_group = pygame.sprite.GroupSingle()
 laser_group = pygame.sprite.Group()
+meteor_group = pygame.sprite.Group()
 
 ship = Ship(ship_group)
-laser = Laser(laser_group, (200, 600))
 
 
 while True:
@@ -71,6 +90,8 @@ while True:
         if event.type == pygame.QUIT:
             pygame.quit()
             sys.exit()
+        if event.type == meteor_timer:
+            Meteor(meteor_group)
 
     dt = clock.tick() / 1000
 
@@ -78,8 +99,10 @@ while True:
 
     ship_group.draw(screen)
     laser_group.draw(screen)
+    meteor_group.draw(screen)
 
     ship_group.update()
     laser_group.update()
+    meteor_group.update()
 
     pygame.display.update()
