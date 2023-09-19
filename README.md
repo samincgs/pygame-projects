@@ -4,11 +4,12 @@ A github repository/devlog to track all my progress with the pygame framework in
 
 #### INDEX
 
-extra_tutorials (extra tutorials on different topics in pygame) - Clear Code <br/>
+extra_tutorials (extra tutorials on different topics in pygame) - Clear Code/Coding with Russ <br/>
 pygame_tutorial_runner - Clear Code <br/>
 space_dodge - Tech with Tim <br/>
 pong - Clear Code <br/>
 asteroid_shooter = Clear Code <br/>
+frogger (crossy road remake) - Clear Code <br/>
 
 #### INSPIRATIONS
 
