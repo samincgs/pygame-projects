@@ -64,6 +64,24 @@ class Meteor(pygame.sprite.Sprite):
         self.rect.topleft = (round(self.pos.x), round(self.pos.y))
 
 
+class Score:
+    def __init__(self):
+        self.font = pygame.font.Font("graphics/subatomic.ttf", 50)
+
+    def display(self):
+        score_text = f"Score: {pygame.time.get_ticks() // 1000}"
+        score_surf = self.font.render(score_text, True, (255, 255, 255))
+        score_rect = score_surf.get_rect(center=(screen_width / 2, 600))
+        screen.blit(score_surf, score_rect)
+        pygame.draw.rect(
+            screen,
+            (255, 255, 255),
+            score_rect.inflate(40, 40),
+            width=6,
+            border_radius=10,
+        )
+
+
 pygame.init()
 
 screen_width, screen_height = 1280, 720
@@ -83,6 +101,7 @@ laser_group = pygame.sprite.Group()
 meteor_group = pygame.sprite.Group()
 
 ship = Ship(ship_group)
+score = Score()
 
 
 while True:
@@ -96,6 +115,8 @@ while True:
     dt = clock.tick() / 1000
 
     screen.blit(bg, (0, 0))
+
+    score.display()
 
     ship_group.draw(screen)
     laser_group.draw(screen)
