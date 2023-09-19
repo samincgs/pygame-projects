@@ -51,7 +51,12 @@ class Laser(pygame.sprite.Sprite):
 class Meteor(pygame.sprite.Sprite):
     def __init__(self, groups):
         super().__init__(groups)
-        self.image = pygame.image.load("graphics/meteor.png").convert_alpha()
+        meteor_surf = pygame.image.load("graphics/meteor.png").convert_alpha()
+        meteor_size = pygame.math.Vector2(meteor_surf.get_size()) * random.uniform(
+            0.5, 1.5
+        )
+        meteor_scaled = pygame.transform.scale(meteor_surf, meteor_size)
+        self.image = meteor_scaled
         x = random.randint(10, screen_width - 10)
         y = random.randint(-150, 50)
         self.rect = self.image.get_rect(midbottom=(x, y))
