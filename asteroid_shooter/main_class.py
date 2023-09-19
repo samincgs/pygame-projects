@@ -27,11 +27,17 @@ class Ship(pygame.sprite.Sprite):
 
             Laser(self.rect.midtop, laser_group)
 
+    def meteor_collision(self):
+        if pygame.sprite.spritecollide(self, meteor_group, True):
+            pygame.quit()
+            sys.exit()
+
     def update(self):
         self.laser_time()
         self.laser_shoot()
         self.input_position()
         self.laser_shoot()
+        self.meteor_collision()
 
 
 class Laser(pygame.sprite.Sprite):
