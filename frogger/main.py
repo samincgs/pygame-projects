@@ -27,7 +27,9 @@ while True:
 
     dt = clock.tick() / 1000
 
-    all_sprites.update()
+    screen.fill("black")
+
+    all_sprites.update(dt)
 
     all_sprites.draw(screen)
 
