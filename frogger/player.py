@@ -14,7 +14,7 @@ class Player(pygame.sprite.Sprite):
         self.rect = self.image.get_rect(center=(pos))
 
         self.pos = pygame.math.Vector2(self.rect.center)
-        self.direction = pygame.math.Vector2(0, 0)
+        self.direction = pygame.math.Vector2()
         self.speed = 200
 
     def import_assets(self):
@@ -35,7 +35,6 @@ class Player(pygame.sprite.Sprite):
                     self.animations[key].append(surf)
 
                 # self.animations[key].append(surf)
-        print(self.animations)
 
     def move(self, dt):
         self.pos += self.direction * self.speed * dt
@@ -44,15 +43,14 @@ class Player(pygame.sprite.Sprite):
     def animate(self, dt):
         current_animation = self.animations[self.status]
 
-        self.frame_index += 10 * dt
-        if self.frame_index >= len(current_animation):
+        if self.direction.magnitude() != 0:
+            self.frame_index += 10 * dt
+            if self.frame_index >= len(current_animation):
+                self.frame_index = 0
+            self.direction = self.direction.normalize()
+        else:
             self.frame_index = 0
         self.image = current_animation[int(self.frame_index)]
-
-        if self.direction.magnitude() != 0:
-            self.direction = self.direction.normalize()
-
-        print(current_animation)
 
     def input(self):
         keys = pygame.key.get_pressed()
