@@ -14,7 +14,7 @@ all_sprites = pygame.sprite.Group()
 
 # classes
 player = Player(all_sprites, (200, 300))
-car = Car(all_sprites, (500, 400))
+car = Car(all_sprites, (700, 400))
 
 while True:
     for event in pygame.event.get():
