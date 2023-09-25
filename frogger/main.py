@@ -3,6 +3,16 @@ from settings import *
 from player import Player
 from car import Car
 
+
+class AllSprites(pygame.sprite.Group):
+    def __init__(self):
+        super().__init__()
+
+    def customize_draw(self):
+        for sprite in self.sprites():
+            screen.blit(sprite.image, sprite.rect)
+
+
 pygame.init()
 
 screen = pygame.display.set_mode((WINDOW_WIDTH, WINDOW_HEIGHT))
@@ -10,7 +20,7 @@ pygame.display.set_caption("Frogger")
 clock = pygame.time.Clock()
 
 # groups
-all_sprites = pygame.sprite.Group()
+all_sprites = AllSprites()
 
 # classes
 player = Player(all_sprites, (200, 300))
